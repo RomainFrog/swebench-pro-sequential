@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/RomainFrog/swebench-pro-sequential/raw/main/schemas/run-manifest.schema.json",
+  "title": "swebench-seq run manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "benchmark",
+    "runtime",
+    "swebench_seq_version",
+    "dataset",
+    "evaluator",
+    "model",
+    "execution",
+    "selection"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "benchmark": {
+      "type": "object",
+      "required": [
+        "version",
+        "sequential_order_sha256",
+        "canonical_inputs",
+        "complete_suite"
+      ],
+      "properties": {
+        "version": {"type": "string"},
+        "canonical_inputs": {"type": "boolean"},
+        "complete_suite": {"type": "boolean"},
+        "sequential_order_sha256": {"$ref": "#/$defs/sha256"},
+        "commit_dates_sha256": {"$ref": "#/$defs/sha256"},
+        "commit_topo_ranks_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["python", "platform", "packages"],
+      "properties": {
+        "python": {"type": "string"},
+        "platform": {
+          "type": "object",
+          "required": ["system", "machine"],
+          "properties": {
+            "system": {"type": "string"},
+            "machine": {"type": "string"}
+          }
+        },
+        "podman": {"type": ["string", "null"]},
+        "packages": {"type": "object"},
+        "source_commit": {"type": ["string", "null"]},
+        "source_dirty": {"type": ["boolean", "null"]},
+        "source_untracked": {"type": ["boolean", "null"]},
+        "uv_lock_sha256": {"type": ["string", "null"]}
+      }
+    },
+    "created_at_utc": {"type": "string", "format": "date-time"},
+    "swebench_seq_version": {"type": "string"},
+    "experiment_config": {"type": ["string", "null"]},
+    "experiment_config_sha256": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "output_dir": {"type": "string"},
+    "task_manifest": {"type": "string"},
+    "dataset": {"type": "object"},
+    "evaluator": {"type": "object"},
+    "model": {"type": "object"},
+    "execution": {"type": "object"},
+    "selection": {
+      "type": "object",
+      "required": ["repositories", "tasks"],
+      "properties": {
+        "repositories": {"type": "integer", "minimum": 0},
+        "tasks": {"type": "integer", "minimum": 0}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

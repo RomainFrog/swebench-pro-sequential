@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/RomainFrog/swebench-pro-sequential/raw/main/schemas/task-result.schema.json",
+  "title": "swebench-seq task result",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "instance_id",
+    "rollout_status",
+    "model_calls",
+    "wall_seconds",
+    "patch_bytes",
+    "usage"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "instance_id": {"type": "string"},
+    "rollout_status": {"type": "string"},
+    "model_calls": {"type": "integer", "minimum": 0},
+    "wall_seconds": {"type": "number", "minimum": 0},
+    "patch_bytes": {"type": "integer", "minimum": 0},
+    "usage": {
+      "type": "object",
+      "properties": {
+        "input_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "output_tokens": {"type": ["integer", "null"], "minimum": 0},
+        "total_tokens": {"type": ["integer", "null"], "minimum": 0}
+      }
+    }
+  }
+}

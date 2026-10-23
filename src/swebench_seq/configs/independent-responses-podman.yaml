@@ -1,0 +1,23 @@
+# Full public independent baseline using an OpenAI Responses-compatible API.
+# Set OPENAI_API_KEY before running. The evaluator is downloaded automatically.
+
+all_repos: true
+sequential: false
+n_runs: 1
+concurrency: 1
+provider: openai
+api_key_env: OPENAI_API_KEY
+context_window: 128000
+overall_timeout: 3600
+skip_existing_patches: true
+output_dir: runs/independent-responses-podman
+
+model:
+  model_name: gpt-5
+  model_class: swebench_seq.agent.responses.OpenAIResponsesModel
+  cost_tracking: ignore_errors
+  model_kwargs:
+    reasoning_effort: medium
+    max_output_tokens: 16000
+    bash_tool: true
+    replay_encrypted_reasoning: true

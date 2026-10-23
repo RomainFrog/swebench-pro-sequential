@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/RomainFrog/swebench-pro-sequential/raw/main/schemas/task-manifest.schema.json",
+  "title": "swebench-seq task manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "benchmark_version",
+    "canonical_inputs",
+    "complete_suite",
+    "sequential_order_sha256",
+    "task_suite",
+    "repos"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "benchmark_version": {"type": "string"},
+    "canonical_inputs": {"type": "boolean"},
+    "complete_suite": {"type": "boolean"},
+    "sequential_order_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "task_suite": {"type": "string"},
+    "cap_per_repo": {"type": ["integer", "null"], "minimum": 0},
+    "limit": {"type": ["integer", "null"], "minimum": 0},
+    "sequential": {"type": "boolean"},
+    "n_runs": {"type": "integer", "minimum": 1},
+    "repos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["repo", "order_source", "instance_ids", "tasks"],
+        "properties": {
+          "repo": {"type": "string"},
+          "order_source": {"type": "string"},
+          "available_task_count": {"type": "integer", "minimum": 0},
+          "selected_task_count": {"type": "integer", "minimum": 0},
+          "instance_ids": {"type": "array", "items": {"type": "string"}},
+          "tasks": {"type": "array", "items": {"type": "object"}}
+        }
+      }
+    }
+  }
+}

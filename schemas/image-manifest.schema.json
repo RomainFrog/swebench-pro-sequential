@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/RomainFrog/swebench-pro-sequential/raw/main/schemas/image-manifest.schema.json",
+  "title": "swebench-seq image manifest",
+  "type": "object",
+  "required": ["schema_version", "benchmark_version", "tasks"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "benchmark_version": {"type": "string"},
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["instance_id", "image"],
+        "properties": {
+          "instance_id": {"type": "string"},
+          "image": {
+            "type": ["object", "null"],
+            "properties": {
+              "reference": {"type": "string"},
+              "id": {"type": ["string", "null"]},
+              "digest": {"type": ["string", "null"]},
+              "repo_digests": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  github-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - name: Verify tag matches package version
+        run: |
+          version=$(python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')
+          test "v${version}" = "$GITHUB_REF_NAME"
+      - run: uv build
+      - run: uv venv /tmp/swebench-seq-release
+      - run: uv pip install --python /tmp/swebench-seq-release/bin/python dist/*.whl
+      - run: /tmp/swebench-seq-release/bin/swebench-seq --version
+      - name: Create GitHub release with Python artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/* --verify-tag --generate-notes
