@@ -26,7 +26,7 @@ dependencies = [
     "click>=8.1",
     "datasets>=2.20",
     # Agent runtime. The driver uses mini's pre-2.0 exception-based Python API.
-    "mini-swe-agent==1.17.5",
+    "mini-swe-agent==2.4.6",
     # Direct dependencies used by the Responses model implementation.
     "httpx>=0.27",
     "openai>=1.101.0,!=1.100.0,!=1.100.1",
