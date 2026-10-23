@@ -1,0 +1,35 @@
+swebench-seq third-party notice
+================================
+
+This repository's original source code and canonical ordering metadata are
+licensed under the MIT License in LICENSE.
+
+SWE-bench Pro dataset
+---------------------
+The benchmark dataset is downloaded at runtime from
+https://huggingface.co/datasets/ScaleAI/SWE-bench_Pro at the revision recorded
+in BENCHMARK.md. It is not redistributed in this repository. The pinned dataset
+card does not declare a license. Users are responsible for reviewing the
+dataset card, terms, and the licenses of the represented upstream repositories
+before using or redistributing dataset content.
+
+SWE-bench Pro evaluator
+-----------------------
+The evaluator is downloaded at runtime from
+https://github.com/scaleapi/SWE-bench_Pro-os at a checksum-verified revision.
+It is not redistributed here. That revision declares the MIT License and
+Copyright (c) 2026 Scale AI, Inc.
+
+Benchmark container images and repository contents
+--------------------------------------------------
+Task images are pulled at runtime from the public image references supplied by
+SWE-bench Pro. They are not redistributed here. Each image contains an upstream
+software repository and dependencies governed by their own licenses. The
+corresponding repository's license controls reuse of its source and tests.
+
+mini-swe-agent and Python dependencies
+---------------------------------------
+mini-swe-agent is installed from PyPI and declares the MIT License, Copyright
+(c) 2025 Kilian A. Lieret and Carlos E. Jimenez. Other Python dependencies are
+installed from their public package distributions and retain their respective
+licenses. They are not vendored into this repository.

@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use swebench-seq, please cite this software and SWE-bench Pro."
+title: "swebench-seq: Sequential evaluation for SWE-bench Pro"
+type: software
+authors:
+  - family-names: Froger
+    given-names: Romain
+repository-code: "https://github.com/RomainFrog/swebenchpro-seq"
+version: 0.1.0
+date-released: 2026-09-10
+license: MIT

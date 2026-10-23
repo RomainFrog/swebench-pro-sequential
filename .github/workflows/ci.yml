@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python-version }}
+      - run: uv sync --frozen --extra dev
+      - run: uv run swebench-seq --help
+      - run: uv run ruff check src tests
+      - run: uv run mypy src
+      - run: uv run pytest -m "not integration and not podman"
+
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: "3.12"
+      - run: uv sync --frozen --extra dev
+      - run: uv run pytest -m "integration and not podman"
+
+  podman:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: "3.12"
+      - run: uv sync --frozen --extra dev
+      - name: Install Podman
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes podman
+      - name: Exercise rootless Podman CLI and compatible API
+        run: |
+          socket="$RUNNER_TEMP/podman.sock"
+          podman system service --time=0 "unix://$socket" &
+          service_pid=$!
+          trap 'kill "$service_pid" 2>/dev/null || true' EXIT
+          for attempt in 1 2 3 4 5; do
+            test -S "$socket" && break
+            sleep 1
+          done
+          DOCKER_HOST="unix://$socket" SWEBENCH_RUN_PODMAN_TESTS=1 uv run pytest -m podman
+
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: "3.12"
+      - run: uv build
+      - run: uv venv /tmp/swebench-seq-wheel
+      - run: uv pip install --python /tmp/swebench-seq-wheel/bin/python dist/*.whl
+      - run: /tmp/swebench-seq-wheel/bin/swebench-seq --help
+      - name: Verify packaged configs and canonical sequence
+        run: |
+          /tmp/swebench-seq-wheel/bin/python - <<'PY'
+          from importlib.resources import files
+          from swebench_seq.experiment import resolve_experiment_config_path
+          from swebench_seq.tasks import load_frozen_sequential_order
+
+          assert resolve_experiment_config_path("sequential-responses-podman").is_file()
+          assert len(load_frozen_sequential_order()) == 11
+          assert files("swebench_seq").joinpath("schemas/report.schema.json").is_file()
+          PY

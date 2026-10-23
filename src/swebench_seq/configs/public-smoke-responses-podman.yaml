@@ -1,0 +1,27 @@
+# Fast two-task sequential smoke test for Podman + OpenAI Responses.
+# Set OPENAI_API_KEY before running. The evaluator is downloaded automatically.
+
+repo: flipt-io/flipt
+sequential: true
+limit: 2
+n_runs: 1
+concurrency: 1
+provider: openai
+api_key_env: OPENAI_API_KEY
+context_window: 128000
+overall_timeout: 120
+skip_existing_patches: false
+output_dir: /tmp/swebench-seq-public-smoke
+
+model:
+  model_name: gpt-5
+  model_class: swebench_seq.agent.responses.OpenAIResponsesModel
+  cost_tracking: ignore_errors
+  model_kwargs:
+    reasoning_effort: medium
+    max_output_tokens: 16000
+    bash_tool: true
+    replay_encrypted_reasoning: true
+
+set:
+  agent.step_limit: 1

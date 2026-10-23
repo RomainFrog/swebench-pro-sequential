@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/RomainFrog/swebenchpro-seq/raw/main/schemas/report.schema.json",
+  "title": "swebench-seq JSON report",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "benchmark_version",
+    "canonical_inputs",
+    "complete_suite",
+    "run_dir",
+    "mode",
+    "summary",
+    "repos"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "benchmark_version": {"type": ["string", "null"]},
+    "canonical_inputs": {"type": "boolean"},
+    "complete_suite": {"type": "boolean"},
+    "run_dir": {"type": "string"},
+    "mode": {"enum": ["sequential", "independent"]},
+    "summary": {
+      "type": "object",
+      "required": [
+        "selected",
+        "artifacts",
+        "completed_rollouts",
+        "graded",
+        "passed",
+        "failed",
+        "infrastructure_or_incomplete",
+        "pass_rate",
+        "model_calls",
+        "compaction_calls",
+        "wall_seconds",
+        "input_tokens",
+        "output_tokens",
+        "total_tokens"
+      ]
+    },
+    "repos": {"type": "object"}
+  }
+}
